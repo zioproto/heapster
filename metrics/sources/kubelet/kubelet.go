@@ -32,6 +32,7 @@ import (
 	kube_client "k8s.io/client-go/kubernetes"
 	v1listers "k8s.io/client-go/listers/core/v1"
 	"k8s.io/client-go/tools/cache"
+	"k8s.io/heapster/metrics/options"
 	"k8s.io/heapster/metrics/util"
 )
 
@@ -316,8 +317,13 @@ func GetNodeHostnameAndIP(node *kube_api.Node) (string, net.IP, error) {
 			return "", nil, fmt.Errorf("node %v is not ready", node.Name)
 		}
 	}
+        opt := options.NewHeapsterRunOptions()
 	hostname, ip := node.Name, ""
 	for _, addr := range node.Status.Addresses {
+                isIPv6 := net.ParseIP(addr.Address).To4() == nil
+                if isIPv6 && opt.DisableIPv6 {
+                        continue
+                }
 		if addr.Type == kube_api.NodeHostName && addr.Address != "" {
 			hostname = addr.Address
 		}

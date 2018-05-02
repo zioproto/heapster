@@ -52,6 +52,7 @@ type HeapsterRunOptions struct {
 	DisableMetricExport   bool
 	SinkExportDataTimeout time.Duration
 	DisableMetricSink     bool
+	DisableIPv6           bool
 }
 
 func NewHeapsterRunOptions() *HeapsterRunOptions {
@@ -92,4 +93,5 @@ func (h *HeapsterRunOptions) AddFlags(fs *pflag.FlagSet) {
 	fs.BoolVar(&h.DisableMetricExport, "disable_export", false, "Disable exporting metrics in api/v1/metric-export")
 	fs.DurationVar(&h.SinkExportDataTimeout, "sink_export_data_timeout", 20*time.Second, "Timeout for exporting data to a sink")
 	fs.BoolVar(&h.DisableMetricSink, "disable_metric_sink", false, "Disable metric sink")
+	fs.BoolVar(&h.DisableIPv6, "disable_ipv6", false, "Disable IPv6")
 }
